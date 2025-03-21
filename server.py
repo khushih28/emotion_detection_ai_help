@@ -1,5 +1,4 @@
 import os
-import gdown  # Install with `pip install gdown`
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import torch
@@ -9,28 +8,15 @@ from transformers import Wav2Vec2Processor, Wav2Vec2ForSequenceClassification
 import cohere
 from dotenv import load_dotenv
 
-# Load environment variables
+# Load environment variables from .env
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)
 
-# Google Drive file ID for the model (✅ Fixed)
-GOOGLE_DRIVE_FILE_ID = "1jHqUsguayTcoyxW1Ckqu8k4uLIlEXzai"
-MODEL_PATH = "my_trained_model.pth"
-
-# Function to download model from Google Drive (✅ Fixed)
-def download_model():
-    if not os.path.exists(MODEL_PATH):  # Only download if not already present
-        print("🔽 Downloading model from Google Drive...")
-        gdown.download(f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}", MODEL_PATH, quiet=False)
-        print("✅ Model downloaded successfully!")
-
-# Ensure model is available before loading (✅ Fixed)
-download_model()
-
 # Load the trained emotion detection model
+MODEL_PATH = "my_trained_model.pth"  # Ensure this exists
 processor = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base")
 model = Wav2Vec2ForSequenceClassification.from_pretrained(
     "facebook/wav2vec2-base", num_labels=7, state_dict=torch.load(MODEL_PATH, map_location=torch.device("cpu"))
@@ -60,7 +46,7 @@ def predict_emotion():
 
     return jsonify({"emotion": emotion})
 
-# Initialize Cohere API (✅ Fixed)
+# Initialize Cohere API
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")  # Use environment variable
 if not COHERE_API_KEY:
     raise ValueError("❌ Cohere API key missing. Check .env file.")
@@ -78,7 +64,7 @@ def get_cohere_response():
         return jsonify({"error": "No text provided"}), 400
 
     try:
-        response = co.chat(
+        response = co.chat(  
             model="command-r-plus",
             message=f"User is feeling {user_emotion}. They said: {user_text}"
         )
