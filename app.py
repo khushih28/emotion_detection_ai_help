@@ -7,9 +7,12 @@ import speech_recognition as sr
 from gtts import gTTS
 import base64
 
-# 🎯 Server URLs (Update if deployed)
-EMOTION_SERVER_URL = "http://127.0.0.1:5001/predict"
-COHERE_SERVER_URL = "http://127.0.0.1:5001/cohere_response"
+# ✅ UPDATE: Use your actual deployed Flask backend URL
+BACKEND_URL = "https://emotion-detection-ai-help.onrender.com"
+EMOTION_SERVER_URL = f"{BACKEND_URL}/predict"
+COHERE_SERVER_URL = f"{BACKEND_URL}/cohere_response"
+
+
 
 # 🎙 Audio settings
 FILENAME = "recorded_audio.wav"
