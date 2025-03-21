@@ -7,12 +7,9 @@ import speech_recognition as sr
 from gtts import gTTS
 import base64
 
-# ✅ UPDATE: Use your actual deployed Flask backend URL
-BACKEND_URL = "https://emotion-detection-ai-help.onrender.com"
-EMOTION_SERVER_URL = f"{BACKEND_URL}/predict"
-COHERE_SERVER_URL = f"{BACKEND_URL}/cohere_response"
-
-
+# 🎯 Server URLs (Update if deployed)
+EMOTION_SERVER_URL = "http://127.0.0.1:5001/predict"
+COHERE_SERVER_URL = "http://127.0.0.1:5001/cohere_response"
 
 # 🎙 Audio settings
 FILENAME = "recorded_audio.wav"
@@ -21,6 +18,7 @@ SAMPLE_RATE = 16000  # Hz
 
 # 🎨 Page settings
 st.set_page_config(page_title="Emotion-Based AI Chatbot", layout="centered")
+
 
 # 🎨 Function to set background image
 def set_background(image_path):
@@ -54,12 +52,15 @@ def set_background(image_path):
     """
     st.markdown(css, unsafe_allow_html=True)
 
+
 # 🌄 Set background image (Make sure image.png is in the same directory!)
 set_background("image.png")
 
 # 📌 Page header
 st.markdown('<div class="title">🎙 Emotion-Based AI Chatbot</div>', unsafe_allow_html=True)
-st.markdown("<div class='section'><h3>Speak into the microphone, and the AI will respond based on your emotion.</h3></div>", unsafe_allow_html=True)
+st.markdown("<div class='section'><h3>Speak into the microphone, and the AI will respond based on your emotion.</h3></div>",
+            unsafe_allow_html=True)
+
 
 # 🎵 Function to play AI-generated response
 def speak_text(text):
@@ -70,6 +71,7 @@ def speak_text(text):
     except Exception as e:
         st.markdown(f"<div class='section'>❌ TTS Error: {e}</div>", unsafe_allow_html=True)
 
+
 # 🎙 Function to record audio
 def record_audio():
     """Records audio and saves it as a WAV file."""
@@ -78,6 +80,7 @@ def record_audio():
     sd.wait()
     wav.write(FILENAME, SAMPLE_RATE, audio)
     st.markdown("<div class='section'>✅ Recording saved!</div>", unsafe_allow_html=True)
+
 
 # 🔤 Function to convert speech to text
 def convert_speech_to_text():
@@ -91,10 +94,10 @@ def convert_speech_to_text():
             return text
         except sr.UnknownValueError:
             st.markdown("<div class='section'>⚠ Could not understand the audio</div>", unsafe_allow_html=True)
-            return None
         except sr.RequestError:
             st.markdown("<div class='section'>❌ Speech-to-text service unavailable</div>", unsafe_allow_html=True)
-            return None
+    return None
+
 
 # 😃 Function to detect emotion
 def get_emotion():
@@ -108,7 +111,8 @@ def get_emotion():
         return emotion
     except Exception as e:
         st.markdown(f"<div class='section'>❌ Error: {e}</div>", unsafe_allow_html=True)
-        return None
+    return None
+
 
 # 🤖 Function to get AI chatbot response
 def get_cohere_response(text, emotion):
@@ -122,16 +126,13 @@ def get_cohere_response(text, emotion):
             return ai_response
         else:
             st.markdown(f"<div class='section'>❌ Cohere Error: {response.json()}</div>", unsafe_allow_html=True)
-            return None
     except Exception as e:
         st.markdown(f"<div class='section'>❌ Error: {e}</div>", unsafe_allow_html=True)
-        return None
+    return None
+
 
 # 🎤 Main button to trigger recording and chatbot interaction
-st.markdown(
-    "<div style='text-align: center;'>",
-    unsafe_allow_html=True,
-)
+st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
 if st.button("🎤 Start Recording"):
     record_audio()
     text = convert_speech_to_text()
@@ -142,3 +143,4 @@ if st.button("🎤 Start Recording"):
             if response_text:
                 speak_text(response_text)
 st.markdown("</div>", unsafe_allow_html=True)
+
