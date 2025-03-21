@@ -16,18 +16,18 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Google Drive file ID for the model
-GOOGLE_DRIVE_FILE_ID = "https://drive.google.com/file/d/1jHqUsguayTcoyxW1Ckqu8k4uLIlEXzai/view?usp=sharing"  # Replace this with your actual file ID
+# Google Drive file ID for the model (✅ Fixed)
+GOOGLE_DRIVE_FILE_ID = "1jHqUsguayTcoyxW1Ckqu8k4uLIlEXzai"
 MODEL_PATH = "my_trained_model.pth"
 
-# Function to download model from Google Drive
+# Function to download model from Google Drive (✅ Fixed)
 def download_model():
     if not os.path.exists(MODEL_PATH):  # Only download if not already present
         print("🔽 Downloading model from Google Drive...")
         gdown.download(f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}", MODEL_PATH, quiet=False)
         print("✅ Model downloaded successfully!")
 
-# Ensure model is available
+# Ensure model is available before loading (✅ Fixed)
 download_model()
 
 # Load the trained emotion detection model
@@ -60,7 +60,7 @@ def predict_emotion():
 
     return jsonify({"emotion": emotion})
 
-# Initialize Cohere API
+# Initialize Cohere API (✅ Fixed)
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")  # Use environment variable
 if not COHERE_API_KEY:
     raise ValueError("❌ Cohere API key missing. Check .env file.")
@@ -87,4 +87,5 @@ def get_cohere_response():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5001)  # Allow external access
+    app.run(debug=True, host="0.0.0.0", port=5001)
+
