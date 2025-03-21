@@ -9,6 +9,7 @@ streamlit
 requests
 sounddevice
 numpy
+gdown
 scipy
 speechrecognition
 gtts
